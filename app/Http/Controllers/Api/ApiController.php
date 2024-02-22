@@ -36,33 +36,30 @@ class ApiController extends Controller
 
     // User Login (POST, formdata)
     public function login(Request $request){
-
-        // data validation
+        // Data validation
         $request->validate([
             "email" => "required|email",
             "password" => "required"
         ]);
 
-        // JWTAuth
-        $token = JWTAuth::attempt([
+        // JWT authentication
+        if ($token = JWTAuth::attempt([
             "email" => $request->email,
             "password" => $request->password
-        ]);
-
-        if(!empty($token)){
-
+        ])) {
             return response()->json([
                 "status" => true,
-                "message" => "User logged in succcessfully",
+                "message" => "User logged in successfully",
                 "token" => $token
             ]);
         }
 
         return response()->json([
             "status" => false,
-            "message" => "Invalid details"
-        ]);
+            "message" => "Email or password is incorrect"
+        ], 401); // Unauthorized
     }
+
 
     // User Profile (GET)
     public function profile(){

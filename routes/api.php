@@ -38,14 +38,31 @@ Route::group([
 
 //Polls Table Cihuy
 
-Route::get("/polls", [PollController::class, "index"]);
-Route::get("/polls/create", [PollController::class, "create"]);
-Route::post("/polls", [PollController::class, "store"]);
-Route::get("/polls/{poll}", [PollController::class, "show"]);
-Route::get("/polls/{poll}/edit", [PollController::class, "edit"]);
-Route::put("/polls/{poll}", [PollController::class, "update"]);
-Route::delete("/polls/{poll}", [PollController::class, "destroy"]);
+// Route::get("/polls", [PollController::class, "index"]);
+// Route::get("/polls/create", [PollController::class, "create"]);
+// Route::post("/polls", [PollController::class, "store"]);
+// Route::get("/polls/{poll}", [PollController::class, "show"]);
+// Route::get("/polls/{poll}/edit", [PollController::class, "edit"]);
+// Route::put("/polls/{poll}", [PollController::class, "update"]);
+// Route::delete("/polls/{poll}", [PollController::class, "destroy"]);
 
 // Division Table Cihuy
 
 Route::get("/divisions", [DivisionController::class, "index"]);
+
+Route::group(['middleware' => 'auth:api'], function () {
+    // Create new poll
+    Route::post('/poll', [PollController::class, 'create']);
+
+    // Get all polls
+    Route::get('/poll', [PollController::class, 'getAll']);
+
+    // Get a specific poll
+    Route::get('/poll/{poll_id}', [PollController::class, 'getOne']);
+
+    // Vote for a poll choice
+    Route::post('/poll/{poll_id}/vote/{choice_id}', [PollController::class, 'vote']);
+
+    // Delete a poll (admin only)
+    Route::delete('/poll/{poll_id}', [PollController::class, 'delete']);
+});

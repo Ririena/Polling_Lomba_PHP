@@ -28,6 +28,14 @@ class User extends Authenticatable implements JWTSubject
 
     ];
 
+
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+
+    public function isUser() {
+        return $this->role === 'user';
+    }
     public function polls(): HasMany
     {
         return $this->hasMany(Poll::class, 'created_by');

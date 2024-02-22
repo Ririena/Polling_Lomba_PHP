@@ -25,7 +25,7 @@ export default function Home() {
                 <h3>{user.user.updated_at}</h3>
                 <LoginCon/>
 
-                <button className="btn btn-lg rotate-45 hover:rotate-0 hover:delay-150 hover:transition-all hover:ease-in-out active:transition-all active:translate-x-1 active:rotate-180 active:ease-in active:btn-md">Hello World</button>
+                <button className="btn btn-lg rotate-45 hover:rotate-0 hover:delay-150 hover:transition-all hover:ease-in-out active:transition-all active:translate-x-1 active:rotate-180 active:ease-in active:btn-lg">Hello World</button>
             </main>
             <h1 data-aos="zoom-out-left">TESTSETESTESTET</h1>
         </>
