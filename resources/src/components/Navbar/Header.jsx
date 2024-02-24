@@ -3,7 +3,19 @@ import { useNavigate} from "react-router-dom";
 import { UserStore } from "../../Context/UserContext";
 import { useState, useEffect, useContext} from 'react'
 import LoginCon from "./LoginCon"
+import Fab from "../FAB";
+import {Button} from "@chakra-ui/react"
+
 export default function Header() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+      setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+      setIsModalOpen(false);
+    };
     const navigate = useNavigate()
 
 
@@ -11,6 +23,19 @@ export default function Header() {
         <>
             <main>
                 <div>
+                <div className="flex justify-center items-center">
+                <Button
+                  colorScheme="blue"
+                  size="lg"
+                  position="fixed"
+                  bottom="10"
+                  right="10"
+                  onClick={openModal}
+                >
+                  +
+                </Button>
+                <Fab isOpen={isModalOpen} onClose={closeModal} />
+              </div>
                     <div className="navbar bg-base-100">
                         <div className="navbar-start">
                             <div className="dropdown">
