@@ -51,18 +51,9 @@ Route::group([
 Route::get("/divisions", [DivisionController::class, "index"]);
 
 Route::group(['middleware' => 'auth:api'], function () {
-    // Create new poll
     Route::post('/poll', [PollController::class, 'create']);
-
-    // Get all polls
     Route::get('/poll', [PollController::class, 'getAll']);
-
-    // Get a specific poll
     Route::get('/poll/{poll_id}', [PollController::class, 'getOne']);
-
-    // Vote for a poll choice
     Route::post('/poll/{poll_id}/vote/{choice_id}', [PollController::class, 'vote']);
-
-    // Delete a poll (admin only)
     Route::delete('/poll/{poll_id}', [PollController::class, 'delete']);
 });
