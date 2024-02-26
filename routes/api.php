@@ -56,4 +56,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/poll/{poll_id}', [PollController::class, 'getOne']);
     Route::post('/poll/{poll_id}/vote/{choice_id}', [PollController::class, 'vote']);
     Route::delete('/poll/{poll_id}', [PollController::class, 'delete']);
+    Route::get('/poll/statistik/{poll_id}', [PollController::class, 'stats']);
 });

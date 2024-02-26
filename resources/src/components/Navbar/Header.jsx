@@ -91,7 +91,7 @@ export default function Header() {
                                 </li>
 
                                 <li>
-                                    <a>Make Polls</a>
+                                    <a href="/poll">Make Polls</a>
                                 </li>
                             </ul>
                         </div>

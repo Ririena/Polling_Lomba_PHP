@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Vote;
 
 class Poll extends Model
 {
@@ -26,6 +27,11 @@ class Poll extends Model
         'deadline' => 'datetime',
     ];
 
+    public function isDeadline()
+    {
+        return now() > $this->deadline;
+    }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -44,5 +50,11 @@ class Poll extends Model
     public function votes(): HasMany
     {
         return $this->hasMany(Vote::class);
+    }
+
+    public function hasUserVoted($user_id)
+    {
+        $qVote = Vote::where('user_id', $user_id)->where('poll_id', $this->id);
+        return $qVote->count()>0;
     }
 }

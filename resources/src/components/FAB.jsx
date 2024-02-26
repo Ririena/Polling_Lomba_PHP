@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Input, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Flex, Text } from "@chakra-ui/react";
-
-const Fab = ({ isOpen, onClose }) => {
+import axios from 'axios';
+import {UserStore} from "../Context/UserContext"
+const Fab = ({ isOpen, onClose,}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState(new Date().toISOString());
   const [choices, setChoices] = useState(['']);
+
+  const [user,SetUser] = useContext(UserStore)
 
   const addChoice = () => {
     setChoices([...choices, '']);
@@ -24,10 +27,19 @@ const Fab = ({ isOpen, onClose }) => {
     setChoices(newChoices);
   };
 
-  const handleCreatePoll = () => {
-
-    console.log('Polling Data:', { title, description, deadline, choices });
-    onClose();
+  const handleCreatePoll = async () => {
+    try {
+      const response = await axios.post('http://localhost:8004/api/poll', {
+        title,
+        description,
+        deadline,
+        choices,
+      });
+      console.log('Polling Data:', response.data);
+      onClose();
+    } catch (error) {
+      console.error('There was a problem creating the poll:', error);
+    }
   };
 
   return (
@@ -80,4 +92,4 @@ const Fab = ({ isOpen, onClose }) => {
   );
 };
 
-export default Fab
+export default Fab;

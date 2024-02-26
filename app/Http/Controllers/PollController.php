@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Division;
 use Illuminate\Http\Request;
 use App\Models\Poll;
 use App\Models\Choice;
@@ -48,11 +49,11 @@ class PollController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user->isAdmin()) {
+        if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $polls = Poll::all();
+        $polls = Poll::with('choices')->get();
 
         return response()->json($polls, 200);
     }
@@ -64,11 +65,40 @@ class PollController extends Controller
 
     try {
         $poll = Poll::findOrFail($poll_id);
+        $poll->choices;
         return response()->json($poll, 200);
     } catch (\Exception $e) {
         return response()->json(['message' => 'Poll not found'], 404);
     }
 }
+
+public function stats(Request $request, $poll_id)
+{
+    $user = Auth::user();
+
+    $poll = Poll::findOrFail($poll_id);
+    $poll->choices;
+
+    $q = Division::all();
+
+    $divMap = array();
+
+    foreach($q as $div) {
+        $cMap = array();
+
+        $qTotalVote = Vote::where("division_id", $div->id)->where("poll_id", $poll_id);
+        foreach($poll->choices as $choice) {
+            $qVote = Vote::where("division_id", $div->id)->where("choice_id", $choice->id)->where("poll_id", $poll_id);
+            $cMap[$choice->choice] = $qVote->count();
+        }
+
+        $divMap[$div->name] = $cMap;
+    }
+
+    return $divMap;
+}
+
+
 
     public function vote(Request $request, $poll_id, $choice_id)
     {
@@ -76,7 +106,7 @@ class PollController extends Controller
 
         $poll = Poll::findOrFail($poll_id);
 
-        if ($poll->isDeadlinePassed()) {
+        if ($poll->isDeadline()) {
             return response()->json(['message' => 'Voting deadline'], 422);
         }
 
@@ -90,17 +120,20 @@ class PollController extends Controller
             'user_id' => $user->id,
             'poll_id' => $poll_id,
             'choice_id' => $choice_id,
+            'division_id' => $user->division_id,
         ]);
         $vote->save();
 
         return response()->json(['message' => 'Voting success'], 200);
     }
 
+
+
     public function delete($poll_id)
     {
         $user = Auth::user();
 
-        if (!$user->isAdmin()) {
+        if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 

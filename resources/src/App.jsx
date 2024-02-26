@@ -12,21 +12,20 @@ import UserContext from "./Context/UserContext";
 import Home from "./pages/Home";
 import { Button } from "@chakra-ui/react";
 import Header from "./components/Navbar/Header.jsx";
-import Poll from "./pages/Poll.jsx"
+import Poll from "./pages/Poll.jsx";
 export default function App() {
     const navigate = useNavigate();
     return (
         <>
-
             <UserContext>
-            <Header/>
+                <Header />
                 <Routes>
                     <Route
                         exact
                         path="/register"
                         element={<Register />}
                     ></Route>
-                    <Route exact path="/poll" element={<Poll/>}></Route>
+                    <Route exact path="/poll" element={<Poll />}></Route>
                     <Route exact path="/login" element={<Login />}></Route>
                     <Route exact path="/" element={<Home />}></Route>
                 </Routes>
