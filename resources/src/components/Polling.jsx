@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { UserStore } from "../Context/UserContext";
+import { useNavigate } from "react-router-dom";
 const Polling = () => {
     const [polls, setPolls] = useState([]);
     const [selectedChoices, setSelectedChoices] = useState({});
@@ -8,8 +9,7 @@ const Polling = () => {
 
     console.log(user.user);
     const [isAdmin, setIsAdmin] = useState(user.user.role === "admin");
-
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -40,6 +40,11 @@ const Polling = () => {
 
     const handleSubmit = async (pollId) => {
         try {
+            if (isAdmin) {
+                alert("You Cant Do That");
+                return;
+            }
+
             const response = await axios.post(
                 `http://localhost:8004/api/poll/${pollId}/vote/${selectedChoices[pollId]}`
             );
@@ -100,6 +105,12 @@ const Polling = () => {
                         className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2"
                     >
                         Submit Choice
+                    </button>
+                    <button
+                        onClick={() => navigate(`/poll/${poll.id}`)}
+                        className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md mr-2"
+                    >
+                        Get Poll
                     </button>
                     {isAdmin && (
                         <button

@@ -13,6 +13,8 @@ import Home from "./pages/Home";
 import { Button } from "@chakra-ui/react";
 import Header from "./components/Navbar/Header.jsx";
 import Poll from "./pages/Poll.jsx";
+import PollVoteFinal from "./pages/PollVoteFinal.jsx";
+import Edit from "./pages/Edit.jsx";
 export default function App() {
     const navigate = useNavigate();
     return (
@@ -28,6 +30,8 @@ export default function App() {
                     <Route exact path="/poll" element={<Poll />}></Route>
                     <Route exact path="/login" element={<Login />}></Route>
                     <Route exact path="/" element={<Home />}></Route>
+                    <Route exact path="/poll/:pollId" element={<PollVoteFinal/>}/>
+                    <Route exact path="/edit" element={<Edit/>}/>
                 </Routes>
             </UserContext>
         </>

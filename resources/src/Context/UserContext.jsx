@@ -23,6 +23,8 @@ export default function UserContext(props) {
                     token: localStorage.getItem("TOKEN"),
                     user: res.data.data,
                 });
+
+
                 setLoading(false)
             } catch (error) {
                 setLoading(false)
@@ -38,6 +40,7 @@ export default function UserContext(props) {
 
         getProfile();
     }, []);
+
 
     if(loading) {
         return null;

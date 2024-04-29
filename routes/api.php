@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post("auth/register", [ApiController::class, "register"]);
 Route::post("auth/login", [ApiController::class, "login"]);
-
+Route::put("auth/edit/{email}", [ApiController::class, 'edit']);
 Route::group([
     "middleware" => ["auth:api"]
 ], function(){

@@ -83,6 +83,9 @@ public function stats(Request $request, $poll_id)
 
     $divMap = array();
 
+    $totalVotes = 0;
+    $pollResults = [];
+
     foreach($q as $div) {
         $cMap = array();
 
@@ -90,13 +93,30 @@ public function stats(Request $request, $poll_id)
         foreach($poll->choices as $choice) {
             $qVote = Vote::where("division_id", $div->id)->where("choice_id", $choice->id)->where("poll_id", $poll_id);
             $cMap[$choice->choice] = $qVote->count();
+
+            if (!isset($pollResults[$choice->choice])) {
+                $pollResults[$choice->choice] = 0;
+            }
+            $pollResults[$choice->choice] += $cMap[$choice->choice];
+
+            $totalVotes += $cMap[$choice->choice];
         }
 
         $divMap[$div->name] = $cMap;
     }
 
-    return $divMap;
+    $finalStats = [];
+    foreach ($pollResults as $choice => $votes) {
+        $percentage = ($votes / $totalVotes) * 100;
+        $finalStats[$choice] = round($percentage, 2) . '%';
+    }
+
+    return response()->json([
+        'poll_stats' => $divMap,
+        'final_stats' => $finalStats
+    ], 200);
 }
+
 
 
 
@@ -105,6 +125,11 @@ public function stats(Request $request, $poll_id)
         $user = Auth::user();
 
         $poll = Poll::findOrFail($poll_id);
+
+
+        if ($user->isAdmin()) {
+            return response()->json(['status' => false,'message' => 'YOUR ADMIN'],);
+        }
 
         if ($poll->isDeadline()) {
             return response()->json(['message' => 'Voting deadline'], 422);

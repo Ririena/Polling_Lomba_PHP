@@ -51,6 +51,10 @@ export default function LoginFun() {
             navigate("/");
         } catch (error) {
             console.error("Login failed:", error.response.data);
+            if (error.response.data.status === false && error.response.data.message == "You Must Change Your Default Password") {
+                localStorage.setItem("EMAIL", email);
+                navigate("/edit")
+            }
         }
     };
 
